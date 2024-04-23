@@ -48,6 +48,8 @@ This application utilizes the following libraries and technologies:
 - **Gson**: JSON library for handling data serialization and deserialization.
 - **XMLPullParser**: Java-based XML parser for reading XML files.
 
+## Setup
+
 ### Step 1: Declare dependency
 
 Add to your app's build.gradle:
@@ -62,7 +64,7 @@ dependencies {
 
 ### Step 2: Configure the AndroidManifest.xml
 
-Add to your app's build.gradle:
+Add to your app's AndroidManifest.xml:
 
 ```XML
     <uses-permission android:name="android.permission.START_ACTIVITY" />
@@ -73,6 +75,28 @@ Add to your app's build.gradle:
     <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" tools:ignore="ScopedStorage"/>
 ```
+
+Note: In the AndroidManifest.xml file, the attribute android:exported="true" must be set to true to enable opening another app.
+```
+    <activity
+        android:name=".YourActivity"
+        android:exported="true">
+    </activity>
+
+```
+
+## Using the App
+
+## Requirements:
+
+- Android Studio
+- Android device or emulator running Android API level 23 or higher
+- Min SDK Version 27+
+- Target SDK Version 33+
+
+### 1. Grant Permissions:
+- On first launch, the app will request the necessary permissions. Grant them to proceed.
+    
 
 ## License
 
