@@ -87,16 +87,35 @@ Note: In the AndroidManifest.xml file, the attribute android:exported="true" mus
 
 ## Using the App
 
-## Requirements:
-
-- Android Studio
-- Android device or emulator running Android API level 23 or higher
-- Min SDK Version 27+
-- Target SDK Version 33+
-
 ### 1. Grant Permissions:
 - On first launch, the app will request the necessary permissions. Grant them to proceed.
+### 2. Acquire Location:
+- The app automatically starts acquiring your GPS location once permissions are granted.
+- Ensure your device's location services are turned on.
+### 3. Read XML from External Storage:
+- Place a file named Gift_Param.xml in the Downloads directory of your device.
+- The app reads this file on startup and uses its values to configure certain features.
+### 4. Open Another App:
+- Click on the "Open App" button to launch a specific activity in another app (ensure the target app is installed).
+### 5. Navigate to Settings:
+- If any permissions are forcefully denied, use the provided alert dialog to navigate to the app settings page and grant the necessary permissions.
+
+## Code Prospective
+
+### 1. Open Another App Without Params
+
+####
+
     
+## Troubleshooting
+- Permissions Not Granted: Ensure you grant all requested permissions. Without them, the app will not function properly.
+- XML File Not Found: Make sure the XML file is correctly placed in the Downloads folder.
+- `Target App Not Found:` The "Open App" feature will not work if the target app is not installed. Verify the package and activity name.
+
+## Additional Notes
+- This app is a demonstration and may require additional configuration for production deployment.
+
+#### For any further issues or contributions, please open an issue or pull request on the GitHub repository.
 
 ## License
 
