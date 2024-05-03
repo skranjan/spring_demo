@@ -100,11 +100,131 @@ Note: In the AndroidManifest.xml file, the attribute android:exported="true" mus
 ### 5. Navigate to Settings:
 - If any permissions are forcefully denied, use the provided alert dialog to navigate to the app settings page and grant the necessary permissions.
 
-## Code Prospective
+# Code Prospective
+### Utilize Android's Intent mechanism to launch the desired activity of the installed application.
+#### Step 1. Get all the required permission.
+```
+    private fun getRequiredPermission() {
+        PermissionX.init(this)
+            .permissions(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            )
+            .request { allGranted, grantedList, deniedList ->
+                if (allGranted) {
+                    --------
+                    --------
+                    readXmlFromFile()
+                } else {
+                   ---------
+                }
+            }
 
-### 1. Open Another App Without Params
+    }
 
-####
+```
+
+#### Step 2. Read the XML file to determine which activity should be called, with or without parameters.
+```
+    private fun readXmlFromFile() {
+        val downloadDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+        val filePath = File(downloadDirectory, "Gift_Param.xml")
+
+        if (!filePath.exists()) {
+            ---------
+            ---------
+            return
+        }
+
+        try {
+            val fileInputStream = FileInputStream(filePath)
+            val parser: XmlPullParser = Xml.newPullParser()
+            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false)
+            parser.setInput(fileInputStream, null)
+                -------
+                -------
+            }
+            fileInputStream.close()
+            getConfigVal()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+```
+
+#### Step 3. Get the current geo location.
+```
+    private fun requestLatLongLocation() {
+        // Get last known location
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult?) {
+                locationResult?.lastLocation?.let {
+                    // Handle the updated location
+                    latitude = it.latitude
+                    longitude = it.longitude
+                    fusedLocationClient.removeLocationUpdates(this)
+                }
+            }
+            override fun onLocationAvailability(locationAvailability: LocationAvailability?) {
+                if (locationAvailability != null) {
+                    if (locationAvailability.isLocationAvailable) {
+                        // Location is available
+                    } else {
+                        // Location is not available (device location is turned off)
+                    }
+                }
+            }
+        }
+        // Request location updates
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        ) {
+            //Toast.makeText(this@MainActivity, "Please wait while we locate your current location.", Toast.LENGTH_LONG).show()
+            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null).addOnFailureListener { e ->
+                // Handle any errors during requestLocationUpdates
+                if(!e.message.isNullOrEmpty())
+                    Toast.makeText(this@MainActivity, e.message, Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+```
+#### The application gathers all necessary information and permissions, and then presents two buttons to the user.
+```
+    - 1. Pay Now
+    - 2. Pay Now With Params
+```
+## 1.Pay Now
+#### Upon clicking one of these buttons, the desired application will open, presenting a transaction form for making payments.
+```
+    intent.setClassName(packageName, className)
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    val bundle = createAndGetBundle("", "", "")
+    intent.putExtras(bundle)
+    context.startActivity(intent)
+```
+## 1.Pay Now with Params
+#### Upon clicking, a new screen will open.
+##### In this form, there are three input boxes, such as...
+    - Amount
+    - Tip
+    - Invoive
+    and two button 
+    - Back
+    - PayNow
+#### Clicking the back button will navigate you back to the previous screen.
+#### On Click PayNow button..
+    - Check form validation
+##### Afterward, the desired app will open to facilitate the payment process.
+```
+    intent.setClassName(packageName, className)
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    val bundle = createAndGetBundle("", "", "")
+    intent.putExtras(bundle)
+    context.startActivity(intent)
+```
 
     
 ## Troubleshooting
